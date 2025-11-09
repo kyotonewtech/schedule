@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Schedule Management System</title>
+</head>
+<body>
+  <div id="app">
+    <header class="toolbar">
+      <div class="toolbar-left">
+        <h1>役員スケジュール管理</h1>
+      </div>
+      <div class="toolbar-center">
+        <button id="prevWeek" class="btn">◀ 前週</button>
+        <span id="currentWeek" class="week-label"></span>
+        <button id="nextWeek" class="btn">次週 ▶</button>
+      </div>
+      <div class="toolbar-right">
+        <button id="googleAuth" class="btn btn-primary">Google連携</button>
+        <button id="printBtn" class="btn">印刷</button>
+        <button id="excelBtn" class="btn">Excel出力</button>
+      </div>
+    </header>
+
+    <main id="calendar-container">
+      <!-- Calendar will be rendered here -->
+    </main>
+  </div>
+
+  <!-- Event Dialog -->
+  <div id="eventDialog" class="dialog-overlay" style="display: none;">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h2 id="dialogTitle">新規イベント</h2>
+        <button id="closeDialog" class="close-btn">×</button>
+      </div>
+      <div class="dialog-body">
+        <form id="eventForm">
+          <div class="form-group">
+            <label for="eventTitle">タイトル <span class="required">*</span></label>
+            <input type="text" id="eventTitle" required>
+          </div>
+
+          <div class="form-group">
+            <label for="eventType">種類 <span class="required">*</span></label>
+            <select id="eventType" required>
+              <option value="meeting">会議</option>
+              <option value="trip">出張</option>
+              <option value="outing">外出</option>
+              <option value="other">その他</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="eventDate">日付 <span class="required">*</span></label>
+            <input type="date" id="eventDate" required>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="isAllDay">
+              終日
+            </label>
+          </div>
+
+          <div id="timeInputs">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="startTime">開始時刻 <span class="required">*</span></label>
+                <input type="time" id="startTime" step="900" required>
+              </div>
+
+              <div class="form-group">
+                <label for="endTime">終了時刻 <span class="required">*</span></label>
+                <input type="time" id="endTime" step="900" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="eventLocation">場所</label>
+            <input type="text" id="eventLocation">
+          </div>
+
+          <div class="dialog-footer">
+            <button type="button" id="deleteEventBtn" class="btn btn-danger" style="display: none;">削除</button>
+            <div class="dialog-footer-right">
+              <button type="button" id="cancelBtn" class="btn">キャンセル</button>
+              <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
