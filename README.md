@@ -5,7 +5,7 @@
 ## 機能概要
 
 - 📅 週次カレンダー表示（日曜日スタート、8:00-20:00）
-- 👥 5名の役員管理（理事、副理事1、副理事2、課長、副課長）
+- 👥 5名の幹部管理（局長、事務次長、病院次長、総務課長、総務課副課長）
 - ✏️ イベント作成・編集・削除
 - 🎨 種類別色分け（会議=赤、出張=緑、外出=青、その他=グレー）
 - 🖱️ ドラッグ&ドロップでイベント移動
@@ -50,18 +50,25 @@ const GOOGLE_CONFIG = {
 };
 ```
 
-### 3. 役員のメールアドレス設定
+### 3. 幹部のメールアドレス設定
 
-初回起動後、LocalStorageに保存された役員データを編集:
+初回起動後、LocalStorageに保存された幹部データを編集:
 
 1. ブラウザの開発者ツールを開く
 2. Console タブで以下を実行:
 
 ```javascript
 const executives = JSON.parse(localStorage.getItem('exec-schedule:executives'));
-executives[0].email = 'director@example.com';
-executives[0].calendarId = 'director@example.com'; // Primary calendarの場合
-// 他の役員も同様に設定...
+executives[0].email = 'director@example.com';      // 局長
+executives[0].calendarId = 'director@example.com';
+executives[1].email = 'admin-deputy@example.com';  // 事務次長
+executives[1].calendarId = 'admin-deputy@example.com';
+executives[2].email = 'hospital-deputy@example.com'; // 病院次長
+executives[2].calendarId = 'hospital-deputy@example.com';
+executives[3].email = 'ga-chief@example.com';      // 総務課長
+executives[3].calendarId = 'ga-chief@example.com';
+executives[4].email = 'ga-deputy-chief@example.com'; // 総務課副課長
+executives[4].calendarId = 'ga-deputy-chief@example.com';
 localStorage.setItem('exec-schedule:executives', JSON.stringify(executives));
 ```
 
@@ -108,7 +115,7 @@ npm run preview
 
 ### イベントの移動
 
-- イベントカードをドラッグして別の日または別の役員にドロップ
+- イベントカードをドラッグして別の日または別の幹部にドロップ
 
 ### イベントの時間変更
 
@@ -142,7 +149,7 @@ npm run preview
 
 ## データ構造
 
-### Executive（役員）
+### Executive（幹部）
 
 ```typescript
 interface Executive {
@@ -174,7 +181,7 @@ interface ScheduleEvent {
 
 ## LocalStorageキー
 
-- `exec-schedule:executives` - 役員データ
+- `exec-schedule:executives` - 幹部データ
 - `exec-schedule:events` - イベントデータ
 - `exec-schedule:auth` - Google認証トークン
 
@@ -196,7 +203,7 @@ interface ScheduleEvent {
 ### イベントが同期されない
 
 - Google認証が完了しているか確認
-- 役員のcalendarIdが正しく設定されているか確認
+- 幹部のcalendarIdが正しく設定されているか確認
 - ブラウザのコンソールでエラーを確認
 
 ### LocalStorageデータのバックアップ

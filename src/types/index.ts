@@ -2,7 +2,7 @@ export type EventType = 'meeting' | 'trip' | 'outing' | 'other';
 
 export interface Executive {
   id: string;
-  title: string;        // 職位（理事、副理事1、副理事2、課長、副課長）
+  title: string;        // 職位（局長、事務次長、病院次長、総務課長、総務課副課長）
   email: string;        // Google Calendar識別用
   calendarId: string;   // Google Calendar ID
   order: number;        // 表示順

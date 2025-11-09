@@ -6,39 +6,39 @@ const STORAGE_KEYS = {
   AUTH: 'exec-schedule:auth',
 } as const;
 
-// 初期データ: 5名の重役
+// 初期データ: 5名の幹部
 const DEFAULT_EXECUTIVES: Executive[] = [
   {
     id: 'exec-1',
-    title: '理事',
+    title: '局長',
     email: '',  // ユーザーが設定
     calendarId: '',
     order: 1,
   },
   {
     id: 'exec-2',
-    title: '副理事1',
+    title: '事務次長',
     email: '',
     calendarId: '',
     order: 2,
   },
   {
     id: 'exec-3',
-    title: '副理事2',
+    title: '病院次長',
     email: '',
     calendarId: '',
     order: 3,
   },
   {
     id: 'exec-4',
-    title: '課長',
+    title: '総務課長',
     email: '',
     calendarId: '',
     order: 4,
   },
   {
     id: 'exec-5',
-    title: '副課長',
+    title: '総務課副課長',
     email: '',
     calendarId: '',
     order: 5,
