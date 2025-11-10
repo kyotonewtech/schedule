@@ -10,6 +10,12 @@ const GOOGLE_CONFIG = {
   scopes: 'https://www.googleapis.com/auth/calendar.events',
 };
 
+// 環境変数の読み込み確認（デバッグ用）
+console.log('=== Google API 環境変数の確認 ===');
+console.log('Client ID:', GOOGLE_CONFIG.clientId ? `${GOOGLE_CONFIG.clientId.substring(0, 20)}...` : '未設定');
+console.log('API Key:', GOOGLE_CONFIG.apiKey ? `${GOOGLE_CONFIG.apiKey.substring(0, 10)}...` : '未設定');
+console.log('================================');
+
 let gapiInitialized = false;
 let gisInitialized = false;
 let tokenClient: any = null;
