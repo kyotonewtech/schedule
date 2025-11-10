@@ -158,6 +158,24 @@ body {
   background-color: #f9fafb;
 }
 
+/* 土曜日のセル背景色 */
+.day-cell.saturday {
+  background-color: #dbeafe;  /* 薄いブルー */
+}
+
+.day-cell.saturday:hover {
+  background-color: #bfdbfe;
+}
+
+/* 日曜日のセル背景色 */
+.day-cell.sunday {
+  background-color: #fee2e2;  /* 薄いレッド */
+}
+
+.day-cell.sunday:hover {
+  background-color: #fecaca;
+}
+
 /* リスト形式レイアウト */
 .day-cell.list-layout {
   display: flex;

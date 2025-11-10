@@ -86,9 +86,12 @@ export class Calendar {
     const minSlots = 3;
     const displaySlots = Math.max(minSlots, eventCount);
 
+    // 曜日クラスを追加（0=日曜、6=土曜）
+    const dayClass = dayIndex === 0 ? 'sunday' : dayIndex === 6 ? 'saturday' : '';
+
     return `
       <div
-        class="day-cell list-layout"
+        class="day-cell list-layout ${dayClass}"
         data-executive-id="${executiveId}"
         data-date="${dateStr}"
         data-day-index="${dayIndex}"
