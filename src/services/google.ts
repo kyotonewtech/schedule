@@ -3,10 +3,9 @@ import { EVENT_TYPE_LABELS } from '../types';
 import { storage } from '../models/storage';
 
 // Google Calendar API設定
-// 注意: 本番環境では環境変数から読み込むべき
 const GOOGLE_CONFIG = {
-  clientId: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
-  apiKey: 'YOUR_API_KEY',
+  clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID || '',
+  apiKey: import.meta.env.VITE_GOOGLE_API_KEY || '',
   discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
   scopes: 'https://www.googleapis.com/auth/calendar.events',
 };
@@ -17,6 +16,15 @@ let tokenClient: any = null;
 
 // Google API初期化
 export async function initGoogleAPI(): Promise<void> {
+  // 環境変数チェック
+  if (!GOOGLE_CONFIG.clientId || !GOOGLE_CONFIG.apiKey) {
+    console.warn(
+      'Google Calendar APIの設定が不完全です。.envファイルにVITE_GOOGLE_CLIENT_IDとVITE_GOOGLE_API_KEYを設定してください。\n' +
+      'Google連携機能は無効になりますが、ローカル保存は正常に動作します。'
+    );
+    return Promise.resolve();
+  }
+
   return new Promise((resolve, reject) => {
     if (gapiInitialized && gisInitialized) {
       resolve();
