@@ -5,6 +5,7 @@ import {
   getWeekDates,
   getDayLabel,
   formatTime,
+  parseLocalDate,
 } from '../utils/datetime';
 
 export class Calendar {
@@ -146,14 +147,19 @@ export class Calendar {
       });
     });
 
-    // Day cell double click (create new event)
+    // Day cell click (create new event)
     this.container.querySelectorAll('.day-cell').forEach(cell => {
-      cell.addEventListener('dblclick', (e) => {
+      cell.addEventListener('click', (e) => {
         const target = e.target as HTMLElement;
+        // イベントカードやその内部要素がクリックされた場合は無視
+        if (target.closest('.event-card')) {
+          return;
+        }
+        // セル自体がクリックされた場合
         if (target.classList.contains('day-cell')) {
           const executiveId = target.dataset.executiveId!;
           const dateStr = target.dataset.date!;
-          const date = new Date(dateStr);
+          const date = parseLocalDate(dateStr);
           this.onCellDoubleClick(executiveId, date);
         }
       });
