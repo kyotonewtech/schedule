@@ -219,8 +219,13 @@ export class EventDialog {
         });
       }
 
-      // Sync to Google Calendar
-      await syncEventToGoogle(savedEvent);
+      // Sync to Google Calendar (optional - don't fail if sync fails)
+      try {
+        await syncEventToGoogle(savedEvent);
+      } catch (syncError) {
+        console.warn('Google Calendar sync failed:', syncError);
+        // Continue anyway - event is saved locally
+      }
 
       this.close();
       this.onSave();
