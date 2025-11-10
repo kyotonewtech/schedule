@@ -89,9 +89,18 @@ export class SettingsDialog {
       updates[execId][field] = value;
     });
 
+    console.log('[Settings] 保存する内容:', updates);
+
     // Save updates
     Object.entries(updates).forEach(([execId, update]) => {
       storage.updateExecutive(execId, update);
+      console.log(`[Settings] 役員 ${execId} を更新:`, update);
+    });
+
+    // 保存後の確認
+    console.log('[Settings] 保存後のデータ確認:');
+    storage.getExecutives().forEach(exec => {
+      console.log(`  ${exec.title}: email=${exec.email}, calendarId=${exec.calendarId || '(未設定)'}`);
     });
 
     alert('設定を保存しました');

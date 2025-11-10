@@ -63,10 +63,19 @@ class StorageManager {
   updateExecutive(id: string, updates: Partial<Executive>): Executive | null {
     const executives = this.getExecutives();
     const index = executives.findIndex(e => e.id === id);
-    if (index === -1) return null;
+    if (index === -1) {
+      console.error(`[Storage] 役員が見つかりません: ${id}`);
+      return null;
+    }
 
+    const before = { ...executives[index] };
     executives[index] = { ...executives[index], ...updates };
     this.saveExecutives(executives);
+
+    console.log(`[Storage] 役員情報を更新: ${executives[index].title}`);
+    console.log('  更新前:', { email: before.email, calendarId: before.calendarId });
+    console.log('  更新後:', { email: executives[index].email, calendarId: executives[index].calendarId });
+
     return executives[index];
   }
 
