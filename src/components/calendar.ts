@@ -5,6 +5,7 @@ import {
   getWeekDates,
   getDayLabel,
   formatTime,
+  formatDate,
   parseLocalDate,
 } from '../utils/datetime';
 
@@ -79,7 +80,7 @@ export class Calendar {
   }
 
   private renderDayCell(executiveId: string, date: Date, dayIndex: number, events: ScheduleEvent[]): string {
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = formatDate(date);
     const eventCount = events.length;
     // 基本3セル、4つ以上のイベントがある場合は行を追加
     const minSlots = 3;
