@@ -17,6 +17,7 @@
         <button id="nextWeek" class="btn">次週 ▶</button>
       </div>
       <div class="toolbar-right">
+        <button id="settingsBtn" class="btn">⚙️ 設定</button>
         <button id="googleAuth" class="btn btn-primary">Google連携</button>
         <button id="printBtn" class="btn">印刷</button>
         <button id="excelBtn" class="btn">Excel出力</button>
@@ -88,6 +89,40 @@
             <button type="button" id="deleteEventBtn" class="btn btn-danger" style="display: none;">削除</button>
             <div class="dialog-footer-right">
               <button type="button" id="cancelBtn" class="btn">キャンセル</button>
+              <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Dialog -->
+  <div id="settingsDialog" class="dialog-overlay" style="display: none;">
+    <div class="dialog dialog-wide">
+      <div class="dialog-header">
+        <h2>役員設定</h2>
+        <button id="closeSettings" class="close-btn">×</button>
+      </div>
+      <div class="dialog-body">
+        <form id="settingsForm">
+          <table class="settings-table">
+            <thead>
+              <tr>
+                <th>職位</th>
+                <th>メールアドレス</th>
+                <th>カレンダーID</th>
+              </tr>
+            </thead>
+            <tbody id="executivesTableBody">
+              <!-- Populated by JavaScript -->
+            </tbody>
+          </table>
+
+          <div class="dialog-footer">
+            <div></div>
+            <div class="dialog-footer-right">
+              <button type="button" id="cancelSettings" class="btn">キャンセル</button>
               <button type="submit" class="btn btn-primary">保存</button>
             </div>
           </div>

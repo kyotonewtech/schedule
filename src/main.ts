@@ -1,6 +1,7 @@
 import './styles/main.css';
 import { Calendar } from './components/calendar';
 import { EventDialog } from './components/eventDialog';
+import { SettingsDialog } from './components/settingsDialog';
 // import { DragDropManager } from './components/dragDrop'; // ドラッグ&ドロップ機能は一旦停止
 import { getWeekStart, formatWeekLabel } from './utils/datetime';
 import { printCalendar, exportToExcel } from './utils/export';
@@ -10,6 +11,7 @@ class App {
   private currentWeekStart: Date;
   private calendar: Calendar | null = null;
   private eventDialog: EventDialog;
+  private settingsDialog: SettingsDialog;
   // private dragDropManager: DragDropManager; // ドラッグ&ドロップ機能は一旦停止
   private calendarContainer: HTMLElement;
 
@@ -19,6 +21,7 @@ class App {
 
     // Initialize components
     this.eventDialog = new EventDialog(() => this.refreshCalendar());
+    this.settingsDialog = new SettingsDialog();
     // this.dragDropManager = new DragDropManager(() => this.refreshCalendar()); // ドラッグ&ドロップ機能は一旦停止
 
     this.init();
@@ -50,6 +53,11 @@ class App {
     document.getElementById('nextWeek')!.addEventListener('click', () => {
       this.currentWeekStart.setDate(this.currentWeekStart.getDate() + 7);
       this.refreshCalendar();
+    });
+
+    // Settings
+    document.getElementById('settingsBtn')!.addEventListener('click', () => {
+      this.settingsDialog.open();
     });
 
     // Google authentication
