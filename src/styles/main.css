@@ -89,7 +89,8 @@ body {
 /* Calendar Container */
 #calendar-container {
   flex: 1;
-  overflow: auto;
+  overflow-x: auto;  /* 横スクロールを有効化 */
+  overflow-y: auto;  /* 縦スクロールを有効化 */
   background: #fff;
   margin: 1rem;
   border-radius: 8px;
@@ -99,9 +100,10 @@ body {
 /* Calendar Grid */
 .calendar {
   display: grid;
-  grid-template-columns: 120px repeat(7, 1fr);
-  min-width: 1200px;
+  grid-template-columns: 120px repeat(7, minmax(150px, 1fr));  /* 各日列の最小幅を150pxに */
+  min-width: max-content;  /* コンテンツに応じた最小幅 */
   position: relative;
+  width: 100%;
 }
 
 .calendar-header {
@@ -121,6 +123,9 @@ body {
 
 .header-cell.position-header {
   background: #f3f4f6;
+  position: sticky;
+  left: 0;
+  z-index: 20;  /* 他のヘッダーより前面に */
 }
 
 /* Time Grid */
@@ -137,6 +142,9 @@ body {
   align-items: center;
   justify-content: center;
   min-height: auto;
+  position: sticky;
+  left: 0;
+  z-index: 5;  /* 他のセルより前面に */
 }
 
 .day-cell {
