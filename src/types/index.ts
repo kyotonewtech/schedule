@@ -1,4 +1,4 @@
-export type EventType = 'meeting' | 'trip' | 'outing' | 'other';
+export type EventType = 'meeting' | 'trip' | 'outing' | 'annualLeave' | 'other';
 
 export interface Executive {
   id: string;
@@ -39,6 +39,7 @@ export const EVENT_TYPE_COLORS: Record<EventType, string> = {
   meeting: '#3b82f6',  // Blue
   trip: '#22c55e',     // Green
   outing: '#ef4444',   // Red
+  annualLeave: '#f59e0b',  // Amber
   other: '#6b7280',    // Gray
 };
 
@@ -46,6 +47,7 @@ export const EVENT_TYPE_LABELS: Record<EventType, string> = {
   meeting: '会議',
   trip: '出張',
   outing: '外出',
+  annualLeave: '年休',
   other: 'その他',
 };
 

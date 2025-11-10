@@ -45,6 +45,18 @@ export class EventDialog {
       }
     });
 
+    // Event type change (hide location for annual leave)
+    const eventTypeSelect = document.getElementById('eventType') as HTMLSelectElement;
+    const locationGroup = document.getElementById('locationGroup')!;
+
+    eventTypeSelect.addEventListener('change', () => {
+      if (eventTypeSelect.value === 'annualLeave') {
+        locationGroup.style.display = 'none';
+      } else {
+        locationGroup.style.display = 'block';
+      }
+    });
+
     // Form submit
     this.form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -81,6 +93,7 @@ export class EventDialog {
     const allDayCheckbox = document.getElementById('isAllDay') as HTMLInputElement;
     allDayCheckbox.checked = false;
     document.getElementById('timeInputs')!.style.display = 'block';
+    document.getElementById('locationGroup')!.style.display = 'block';
 
     this.show();
   }
@@ -115,6 +128,13 @@ export class EventDialog {
       const end = new Date(event.endDate);
       startTime.value = formatTime(start);
       endTime.value = formatTime(end);
+    }
+
+    // Hide location field for annual leave
+    if (event.type === 'annualLeave') {
+      document.getElementById('locationGroup')!.style.display = 'none';
+    } else {
+      document.getElementById('locationGroup')!.style.display = 'block';
     }
 
     this.show();
@@ -164,6 +184,9 @@ export class EventDialog {
     try {
       let savedEvent: ScheduleEvent;
 
+      // Annual leave does not have location
+      const location = eventType === 'annualLeave' ? undefined : (eventLocation || undefined);
+
       if (this.currentEvent) {
         // Update existing event
         savedEvent = storage.updateEvent(this.currentEvent.id, {
@@ -172,7 +195,7 @@ export class EventDialog {
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
           isAllDay,
-          location: eventLocation || undefined,
+          location,
         })!;
       } else {
         // Create new event
@@ -183,7 +206,7 @@ export class EventDialog {
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
           isAllDay,
-          location: eventLocation || undefined,
+          location,
         });
       }
 
