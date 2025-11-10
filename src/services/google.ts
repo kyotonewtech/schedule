@@ -132,7 +132,13 @@ export async function syncEventToGoogle(event: ScheduleEvent): Promise<void> {
       // Save Google event ID back to local storage
       storage.updateEvent(event.id, { googleEventId });
     }
-  } catch (error) {
+  } catch (error: any) {
+    // Check for 401 Unauthorized - token expired
+    if (error?.status === 401 || error?.result?.error?.code === 401) {
+      console.warn('Access token expired. Clearing token. Please re-authenticate.');
+      storage.clearAuthToken();
+      throw new Error('Google認証が期限切れです。再度「Google連携」ボタンをクリックしてください。');
+    }
     console.error('Failed to sync event to Google Calendar:', error);
     throw error;
   }

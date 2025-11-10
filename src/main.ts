@@ -123,6 +123,9 @@ class App {
     // Update week label
     const weekLabel = document.getElementById('currentWeek')!;
     weekLabel.textContent = formatWeekLabel(this.currentWeekStart);
+
+    // Update auth button state (in case token expired)
+    this.updateAuthButton();
   }
 
   private updateAuthButton(): void {

@@ -222,8 +222,12 @@ export class EventDialog {
       // Sync to Google Calendar (optional - don't fail if sync fails)
       try {
         await syncEventToGoogle(savedEvent);
-      } catch (syncError) {
+      } catch (syncError: any) {
         console.warn('Google Calendar sync failed:', syncError);
+        // Show user-friendly error message if available
+        if (syncError?.message) {
+          alert(`イベントは保存されましたが、Google Calendar同期に失敗しました。\n\n${syncError.message}`);
+        }
         // Continue anyway - event is saved locally
       }
 
