@@ -48,12 +48,21 @@ export class EventDialog {
     // Event type change (hide location for annual leave)
     const eventTypeSelect = document.getElementById('eventType') as HTMLSelectElement;
     const locationGroup = document.getElementById('locationGroup')!;
+    const eventTitleInput = document.getElementById('eventTitle') as HTMLInputElement;
 
     eventTypeSelect.addEventListener('change', () => {
       if (eventTypeSelect.value === 'annualLeave') {
         locationGroup.style.display = 'none';
+        // 年休を選択したらタイトルに自動入力
+        if (!eventTitleInput.value || eventTitleInput.value === '年休') {
+          eventTitleInput.value = '年休';
+        }
       } else {
         locationGroup.style.display = 'block';
+        // 年休から他の種類に変更した場合、タイトルが「年休」だったらクリア
+        if (eventTitleInput.value === '年休') {
+          eventTitleInput.value = '';
+        }
       }
     });
 
