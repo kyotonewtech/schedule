@@ -36,9 +36,9 @@ export interface CalendarState {
 }
 
 export const EVENT_TYPE_COLORS: Record<EventType, string> = {
-  meeting: '#ef4444',  // Red
+  meeting: '#3b82f6',  // Blue
   trip: '#22c55e',     // Green
-  outing: '#3b82f6',   // Blue
+  outing: '#ef4444',   // Red
   other: '#6b7280',    // Gray
 };
 
