@@ -109,6 +109,11 @@ export class Calendar {
       ? '終日'
       : `${formatTime(startDate)} - ${formatTime(endDate)}`;
 
+    // 時間と場所を同一行に表示
+    const timeLocationText = event.location
+      ? `${timeText} ${this.escapeHtml(event.location)}`
+      : timeText;
+
     return `
       <div
         class="event-card list-style"
@@ -116,8 +121,7 @@ export class Calendar {
         style="background-color: ${color}; border-color: ${color};"
       >
         <div class="event-title">${this.escapeHtml(event.title)}</div>
-        <div class="event-time">${timeText}</div>
-        ${event.location ? `<div class="event-location">${this.escapeHtml(event.location)}</div>` : ''}
+        <div class="event-time">${timeLocationText}</div>
       </div>
     `;
   }
