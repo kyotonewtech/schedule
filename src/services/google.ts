@@ -123,37 +123,53 @@ export function isAuthenticated(): boolean {
 
 // イベントをGoogle Calendarに同期
 export async function syncEventToGoogle(event: ScheduleEvent): Promise<void> {
+  console.log('[Google Sync] 同期開始:', { executiveId: event.executiveId, title: event.title });
+
   if (!isAuthenticated()) {
-    console.warn('Not authenticated. Skipping Google Calendar sync.');
+    console.warn('[Google Sync] 認証されていません。Google連携ボタンをクリックして認証してください。');
     return;
   }
 
+  console.log('[Google Sync] 認証OK');
+
   const executive = storage.getExecutives().find(e => e.id === event.executiveId);
+  console.log('[Google Sync] 役員情報:', executive ? {
+    id: executive.id,
+    title: executive.title,
+    calendarId: executive.calendarId || '(未設定)'
+  } : '(役員が見つかりません)');
+
   if (!executive?.calendarId) {
-    console.warn('Executive calendar ID not set. Skipping sync.');
+    console.warn('[Google Sync] カレンダーIDが設定されていません。設定画面で設定してください。');
     return;
   }
+
+  console.log('[Google Sync] カレンダーIDあり、同期を実行します...');
 
   try {
     const calendarEvent = convertToGoogleEvent(event);
 
     if (event.googleEventId) {
       // Update existing event
+      console.log('[Google Sync] 既存イベントを更新:', event.googleEventId);
       await updateEventInGoogle(executive.calendarId, event.googleEventId, calendarEvent);
+      console.log('[Google Sync] 更新成功！');
     } else {
       // Create new event
+      console.log('[Google Sync] 新規イベントを作成:', executive.calendarId);
       const googleEventId = await createEventInGoogle(executive.calendarId, calendarEvent);
+      console.log('[Google Sync] 作成成功！Google Event ID:', googleEventId);
       // Save Google event ID back to local storage
       storage.updateEvent(event.id, { googleEventId });
     }
   } catch (error: any) {
     // Check for 401 Unauthorized - token expired
     if (error?.status === 401 || error?.result?.error?.code === 401) {
-      console.warn('Access token expired. Clearing token. Please re-authenticate.');
+      console.error('[Google Sync] 認証トークンが期限切れです');
       storage.clearAuthToken();
       throw new Error('Google認証が期限切れです。再度「Google連携」ボタンをクリックしてください。');
     }
-    console.error('Failed to sync event to Google Calendar:', error);
+    console.error('[Google Sync] 同期エラー:', error);
     throw error;
   }
 }
