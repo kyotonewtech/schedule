@@ -136,25 +136,30 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 600px;
+  min-height: auto;
 }
 
 .day-cell {
   border: 1px solid #e5e7eb;
   position: relative;
   min-height: 600px;
-  background: linear-gradient(
-    to bottom,
-    transparent calc(100% / 12 - 1px),
-    #f0f0f0 calc(100% / 12 - 1px),
-    #f0f0f0 calc(100% / 12)
-  );
-  background-size: 100% calc(100% / 12);
   cursor: pointer;
 }
 
 .day-cell:hover {
   background-color: #f9fafb;
+}
+
+/* リスト形式レイアウト */
+.day-cell.list-layout {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  gap: 4px;
+  min-height: auto;
+  /* 基本3セル、動的に拡張 */
+  height: calc(var(--event-slots, 3) * 60px + 8px);
+  min-height: calc(3 * 60px + 8px);
 }
 
 /* Event Card */
@@ -191,6 +196,18 @@ body {
   position: static;
   margin: 2px;
   width: auto;
+}
+
+/* リスト形式のイベントカード */
+.event-card.list-style {
+  position: static;
+  margin: 0;
+  width: auto;
+  white-space: normal;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .event-title {

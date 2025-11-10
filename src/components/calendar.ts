@@ -1,11 +1,10 @@
 import type { Executive, ScheduleEvent } from '../types';
-import { BUSINESS_HOURS, EVENT_TYPE_COLORS } from '../types';
+import { EVENT_TYPE_COLORS } from '../types';
 import { storage } from '../models/storage';
 import {
   getWeekDates,
   getDayLabel,
   formatTime,
-  timeStringToMinutes,
 } from '../utils/datetime';
 
 export class Calendar {
@@ -80,13 +79,19 @@ export class Calendar {
 
   private renderDayCell(executiveId: string, date: Date, dayIndex: number, events: ScheduleEvent[]): string {
     const dateStr = date.toISOString().split('T')[0];
+    const eventCount = events.length;
+    // 基本3セル、4つ以上のイベントがある場合は行を追加
+    const minSlots = 3;
+    const displaySlots = Math.max(minSlots, eventCount);
 
     return `
       <div
-        class="day-cell"
+        class="day-cell list-layout"
         data-executive-id="${executiveId}"
         data-date="${dateStr}"
         data-day-index="${dayIndex}"
+        data-event-count="${eventCount}"
+        style="--event-slots: ${displaySlots};"
       >
         ${events.map(event => this.renderEvent(event)).join('')}
       </div>
@@ -98,58 +103,21 @@ export class Calendar {
     const startDate = new Date(event.startDate);
     const endDate = new Date(event.endDate);
 
-    if (event.isAllDay) {
-      return `
-        <div
-          class="event-card all-day"
-          data-event-id="${event.id}"
-          style="background-color: ${color}; border-color: ${color};"
-        >
-          <div class="event-title">${this.escapeHtml(event.title)}</div>
-          <div class="event-time">終日</div>
-          ${event.location ? `<div class="event-location">${this.escapeHtml(event.location)}</div>` : ''}
-        </div>
-      `;
-    }
-
-    const position = this.calculateEventPosition(startDate, endDate);
+    const timeText = event.isAllDay
+      ? '終日'
+      : `${formatTime(startDate)} - ${formatTime(endDate)}`;
 
     return `
       <div
-        class="event-card"
+        class="event-card list-style"
         data-event-id="${event.id}"
-        style="
-          background-color: ${color};
-          border-color: ${color};
-          top: ${position.top}%;
-          height: ${position.height}%;
-        "
+        style="background-color: ${color}; border-color: ${color};"
       >
-        <div class="resize-handle resize-handle-top"></div>
         <div class="event-title">${this.escapeHtml(event.title)}</div>
-        <div class="event-time">${formatTime(startDate)} - ${formatTime(endDate)}</div>
+        <div class="event-time">${timeText}</div>
         ${event.location ? `<div class="event-location">${this.escapeHtml(event.location)}</div>` : ''}
-        <div class="resize-handle resize-handle-bottom"></div>
       </div>
     `;
-  }
-
-  private calculateEventPosition(startDate: Date, endDate: Date): { top: number; height: number } {
-    const startMinutes = timeStringToMinutes(formatTime(startDate));
-    const endMinutes = timeStringToMinutes(formatTime(endDate));
-
-    const businessStartMinutes = BUSINESS_HOURS.start * 60;
-    const businessEndMinutes = BUSINESS_HOURS.end * 60;
-    const businessDuration = businessEndMinutes - businessStartMinutes;
-
-    // 8:00を0%、20:00を100%とする
-    const top = ((startMinutes - businessStartMinutes) / businessDuration) * 100;
-    const height = ((endMinutes - startMinutes) / businessDuration) * 100;
-
-    return {
-      top: Math.max(0, Math.min(100, top)),
-      height: Math.max(1, Math.min(100 - top, height)),
-    };
   }
 
   private isEventOnDate(event: ScheduleEvent, date: Date): boolean {

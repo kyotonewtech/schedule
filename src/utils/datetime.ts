@@ -87,6 +87,12 @@ export function combineDateAndTime(date: Date, hours: number, minutes: number): 
   return result;
 }
 
+// 日付文字列(YYYY-MM-DD)からローカル日付を作成
+export function parseLocalDate(dateString: string): Date {
+  const [year, month, day] = dateString.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
 // 時間文字列から分を取得 (例: "13:45" -> 825分)
 export function timeStringToMinutes(timeString: string): number {
   const { hours, minutes } = parseTime(timeString);

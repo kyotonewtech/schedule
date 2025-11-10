@@ -1,6 +1,6 @@
 import type { ScheduleEvent, EventType } from '../types';
 import { storage } from '../models/storage';
-import { formatDate, formatTime, combineDateAndTime } from '../utils/datetime';
+import { formatDate, formatTime, combineDateAndTime, parseLocalDate } from '../utils/datetime';
 import { syncEventToGoogle } from '../services/google';
 
 export class EventDialog {
@@ -134,7 +134,7 @@ export class EventDialog {
       return;
     }
 
-    const date = new Date(eventDate);
+    const date = parseLocalDate(eventDate);
     let startDate: Date;
     let endDate: Date;
 

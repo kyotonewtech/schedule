@@ -1,7 +1,7 @@
 import './styles/main.css';
 import { Calendar } from './components/calendar';
 import { EventDialog } from './components/eventDialog';
-import { DragDropManager } from './components/dragDrop';
+// import { DragDropManager } from './components/dragDrop'; // ドラッグ&ドロップ機能は一旦停止
 import { getWeekStart, formatWeekLabel } from './utils/datetime';
 import { printCalendar, exportToExcel } from './utils/export';
 import { initGoogleAPI, authenticateGoogle, isAuthenticated } from './services/google';
@@ -10,7 +10,7 @@ class App {
   private currentWeekStart: Date;
   private calendar: Calendar | null = null;
   private eventDialog: EventDialog;
-  private dragDropManager: DragDropManager;
+  // private dragDropManager: DragDropManager; // ドラッグ&ドロップ機能は一旦停止
   private calendarContainer: HTMLElement;
 
   constructor() {
@@ -19,7 +19,7 @@ class App {
 
     // Initialize components
     this.eventDialog = new EventDialog(() => this.refreshCalendar());
-    this.dragDropManager = new DragDropManager(() => this.refreshCalendar());
+    // this.dragDropManager = new DragDropManager(() => this.refreshCalendar()); // ドラッグ&ドロップ機能は一旦停止
 
     this.init();
   }
@@ -99,7 +99,7 @@ class App {
     this.calendar.render();
 
     // Attach drag & drop
-    this.dragDropManager.attachToCalendar(this.calendarContainer);
+    // this.dragDropManager.attachToCalendar(this.calendarContainer); // ドラッグ&ドロップ機能は一旦停止
   }
 
   private refreshCalendar(): void {
@@ -110,7 +110,7 @@ class App {
     }
 
     // Re-attach drag & drop
-    this.dragDropManager.attachToCalendar(this.calendarContainer);
+    // this.dragDropManager.attachToCalendar(this.calendarContainer); // ドラッグ&ドロップ機能は一旦停止
 
     // Update week label
     const weekLabel = document.getElementById('currentWeek')!;
