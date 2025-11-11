@@ -1,0 +1,21 @@
+# 改行コードの自動変換設定
+# リポジトリ内は常にLFで統一
+
+# デフォルト: すべてのテキストファイルはLFに統一
+* text=auto eol=lf
+
+# Windowsバッチファイルは例外的にCRLF
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+
+# バイナリファイルの指定
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary

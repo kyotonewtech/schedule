@@ -1,0 +1,45 @@
+# 依存関係
+node_modules
+
+# ビルド出力（Vercelが自動生成）
+dist
+
+# Git関連
+.git
+.gitignore
+
+# 環境変数（ビルド時のみ必要、Vercelの設定で管理）
+.env
+.env.local
+.env.*.local
+
+# ソースコード（ビルド後は不要）
+src/
+
+# TypeScript設定（ビルド時のみ必要）
+tsconfig.json
+tsconfig.node.json
+
+# Vite設定（ビルド時のみ必要）
+vite.config.ts
+
+# ドキュメント
+*.md
+DEPLOYMENT.md
+GOOGLE_CALENDAR_TROUBLESHOOTING.md
+ADMIN_MANUAL.md
+README.md
+
+# ロックファイル（package-lock.jsonはデプロイ不要）
+package-lock.json
+
+# エディタ設定
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS関連
+.DS_Store
+Thumbs.db

@@ -1,0 +1,601 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  background: #f5f5f5;
+}
+
+#app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Toolbar */
+.toolbar {
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.toolbar h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.toolbar-center {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.toolbar-right {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.week-label {
+  font-size: 1rem;
+  font-weight: 500;
+  min-width: 250px;
+  text-align: center;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.btn:hover {
+  background: #f5f5f5;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: #fff;
+  border-color: #ef4444;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+/* Calendar Container */
+#calendar-container {
+  flex: 1;
+  overflow-x: auto;  /* 横スクロールを有効化 */
+  overflow-y: auto;  /* 縦スクロールを有効化 */
+  background: #fff;
+  margin: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Calendar Grid */
+.calendar {
+  display: grid;
+  grid-template-columns: 120px minmax(80px, 0.6fr) repeat(5, minmax(140px, 1fr)) minmax(80px, 0.6fr);  /* 役職 + 日曜（狭） + 月〜金（広） + 土曜（狭） */
+  min-width: 0;  /* 最小幅の制限を解除 */
+  position: relative;
+  width: 100%;
+}
+
+.calendar-header {
+  display: contents;
+}
+
+.header-cell {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-cell.position-header {
+  background: #f3f4f6;
+  position: sticky;
+  left: 0;
+  z-index: 20;  /* 他のヘッダーより前面に */
+}
+
+/* Time Grid */
+.time-row {
+  display: contents;
+}
+
+.position-cell {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: auto;
+  position: sticky;
+  left: 0;
+  z-index: 5;  /* 他のセルより前面に */
+}
+
+.day-cell {
+  border: 1px solid #e5e7eb;
+  position: relative;
+  min-height: 600px;
+  cursor: pointer;
+}
+
+.day-cell:hover {
+  background-color: #f9fafb;
+}
+
+/* 土曜日のセル背景色 */
+.day-cell.saturday {
+  background-color: #dbeafe;  /* 薄いブルー */
+}
+
+.day-cell.saturday:hover {
+  background-color: #bfdbfe;
+}
+
+/* 日曜日のセル背景色 */
+.day-cell.sunday {
+  background-color: #fee2e2;  /* 薄いレッド */
+}
+
+.day-cell.sunday:hover {
+  background-color: #fecaca;
+}
+
+/* リスト形式レイアウト */
+.day-cell.list-layout {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  gap: 4px;
+  min-height: auto;
+  /* 基本3セル、動的に拡張 */
+  height: calc(var(--event-slots, 3) * 60px + 8px);
+  min-height: calc(3 * 60px + 8px);
+}
+
+/* Event Card */
+.event-card {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border-left: 3px solid;
+  color: #fff;
+  font-size: 0.75rem;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s, box-shadow 0.1s;
+  z-index: 1;
+}
+
+.event-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.event-card.dragging {
+  opacity: 0.5;
+  cursor: move;
+}
+
+.event-card.all-day {
+  position: static;
+  margin: 2px;
+  width: auto;
+}
+
+/* リスト形式のイベントカード */
+.event-card.list-style {
+  position: static;
+  margin: 0;
+  width: auto;
+  white-space: normal;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.event-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.event-time {
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+.event-location {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+/* Resize handles */
+.event-card .resize-handle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  cursor: ns-resize;
+  z-index: 3;
+}
+
+.event-card .resize-handle-top {
+  top: 0;
+}
+
+.event-card .resize-handle-bottom {
+  bottom: 0;
+}
+
+/* Dialog */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background: #fff;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.dialog-wide {
+  max-width: 800px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dialog-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.close-btn:hover {
+  background: #f3f4f6;
+}
+
+.dialog-body {
+  padding: 1.5rem;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 1.5rem;
+}
+
+.dialog-footer-right {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.form-group input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.required {
+  color: #ef4444;
+}
+
+/* Print styles */
+@media print {
+  /* ページ設定 */
+  @page {
+    size: A4 landscape;
+    margin: 0.8cm;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  /* 非表示要素 */
+  .toolbar,
+  .dialog-overlay,
+  .dropdown-menu {
+    display: none !important;
+  }
+
+  /* コンテナ */
+  #calendar-container {
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  /* カレンダーグリッド - A4横1枚に収まるように最適化 */
+  .calendar {
+    page-break-inside: avoid;
+    grid-template-columns: 80px minmax(60px, 0.6fr) repeat(5, minmax(100px, 1fr)) minmax(60px, 0.6fr) !important;  /* 役職 + 日曜（狭） + 月〜金（広） + 土曜（狭） */
+    font-size: 0.875rem;
+  }
+
+  /* モノクロ最適化：すべての背景色を削除 */
+  .event-card,
+  .day-cell,
+  .header-cell,
+  .position-cell,
+  .day-cell.saturday,
+  .day-cell.sunday {
+    background: white !important;
+    background-color: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* モノクロ最適化：枠線を強調 */
+  .day-cell,
+  .header-cell,
+  .position-cell {
+    border: 0.5pt solid #000 !important;
+  }
+
+  .header-cell {
+    font-weight: 600;
+    padding: 0.3rem;
+  }
+
+  .position-cell {
+    font-weight: 600;
+    padding: 0.3rem;
+  }
+
+  /* セルのパディングを削減 */
+  .day-cell {
+    padding: 0.3rem !important;
+    min-height: 60px;
+  }
+
+  /* イベントカード：モノクロ最適化 */
+  .event-card {
+    border: 1pt solid #333 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0.3rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+
+  /* フォントサイズ：A4横1枚に収まるように縮小 */
+  .event-title {
+    font-size: 0.65rem !important;
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: #000 !important;  /* モノクロ印刷：テキストを黒に */
+  }
+
+  .event-time,
+  .event-location {
+    font-size: 0.6rem !important;
+    color: #000 !important;  /* モノクロ印刷：テキストを黒に */
+  }
+
+  /* 行の高さを最適化 */
+  .time-row {
+    display: contents;
+  }
+
+  /* 印刷用タイトル */
+  .print-title {
+    display: block !important;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    padding: 0.3rem;
+  }
+}
+
+/* Loading indicator */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+}
+
+.empty-state h3 {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  font-size: 0.875rem;
+}
+
+/* Settings Dialog */
+.settings-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.settings-table th {
+  background: #f9fafb;
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.settings-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-table .exec-title {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.settings-table .form-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.settings-table .form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+/* Dropdown Menu */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  min-width: 160px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 0.875rem;
+  color: #374151;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f3f4f6;
+}
+
+.dropdown-item:active {
+  background-color: #e5e7eb;
+}
