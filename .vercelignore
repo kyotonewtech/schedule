@@ -2,7 +2,7 @@
 node_modules
 
 # ビルド出力（Vercelが自動生成）
-dist
+# dist
 
 # Git関連
 .git
@@ -18,10 +18,10 @@ dist
 
 # TypeScript設定（ビルド時のみ必要）
 # tsconfig.json
-tsconfig.node.json
+# tsconfig.node.json
 
 # Vite設定（ビルド時のみ必要）
-vite.config.ts
+# vite.config.ts
 
 # ドキュメント
 *.md
@@ -31,7 +31,7 @@ ADMIN_MANUAL.md
 README.md
 
 # ロックファイル（package-lock.jsonはデプロイ不要）
-package-lock.json
+# package-lock.json
 
 # エディタ設定
 .vscode
