@@ -17,7 +17,7 @@ dist
 src/
 
 # TypeScript設定（ビルド時のみ必要）
-tsconfig.json
+# tsconfig.json
 tsconfig.node.json
 
 # Vite設定（ビルド時のみ必要）
